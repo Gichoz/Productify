@@ -33,6 +33,7 @@ export const syncUser = async (req: Request, res: Response) => {
       imageUrl,
     });
 
+    
     res.status(200).json(user);
   } catch (error) {
     console.error("Error syncing user:", error);
