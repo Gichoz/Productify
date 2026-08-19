@@ -28,7 +28,8 @@
     "@clerk/shared@3.47.8": true,
     "@clerk/shared@2.22.1": true,
     "esbuild@0.18.20": true,
-    "esbuild@0.25.12": true
+    "esbuild@0.25.12": true,
+    "esbuild@0.28.2": true
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",
@@ -38,6 +39,7 @@
     "drizzle-kit": "^0.31.10",
     "nodemon": "^3.1.11",
     "ts-node": "^10.9.2",
+    "tsx": "^4.23.12",
     "typescript": "^5.9.3"
   }
 }

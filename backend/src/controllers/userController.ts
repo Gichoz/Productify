@@ -1,19 +1,31 @@
 import type { Request, Response } from "express";
+import { getAuth, clerkClient } from "@clerk/express";
 import * as queries from "../db/queries.js";
 
-import { getAuth } from "@clerk/express";
-
-export async function syncUser(req: Request, res: Response) {
+export const syncUser = async (req: Request, res: Response) => {
   try {
     const { userId } = getAuth(req);
     if (!userId) return res.status(401).json({ error: "Unauthorized" });
 
-    const { email, name, imageUrl } = req.body;
+    // Fetch verified identity data directly from Clerk server-side
+    const clerkUser = await clerkClient.users.getUser(userId);
 
-    if (!email || !name || !imageUrl) {
-      return res.status(400).json({ error: "Email, name, and imageUrl are required" });
+    const email =
+      clerkUser.emailAddresses.find(
+        (e) => e.id === clerkUser.primaryEmailAddressId
+      )?.emailAddress || clerkUser.emailAddresses[0]?.emailAddress;
+
+    if (!email) {
+      return res.status(400).json({ error: "No primary email found for Clerk user" });
     }
 
+    const name =
+      `${clerkUser.firstName || ""} ${clerkUser.lastName || ""}`.trim() ||
+      clerkUser.username ||
+      "User";
+    const imageUrl = clerkUser.imageUrl;
+
+    // Perform upsert using server-verified provider data
     const user = await queries.upsertUser({
       id: userId,
       email,
@@ -26,4 +38,4 @@ export async function syncUser(req: Request, res: Response) {
     console.error("Error syncing user:", error);
     res.status(500).json({ error: "Failed to sync user" });
   }
-}
+};
