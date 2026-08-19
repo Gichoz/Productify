@@ -19,7 +19,17 @@ export const getUserById = async (id: string) => {
   return db.query.users.findFirst({ where: eq(users.id, id) });
 };
 
+// USER QUERIES
 export const updateUser = async (id: string, data: Partial<NewUser>) => {
+  // Validate that 'data' contains at least one defined value
+  const hasDefinedFields = Object.values(data).some(
+    (value) => value !== undefined
+  );
+
+  if (!data || !hasDefinedFields) {
+    throw new Error("No valid fields provided for update");
+  }
+
   const [user] = await db
     .update(users)
     .set(data)
