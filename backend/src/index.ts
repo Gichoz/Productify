@@ -2,7 +2,9 @@ import express from "express";
 import dotenv from "dotenv";
 import { clerkMiddleware } from "@clerk/express";
 import cors from "cors"; 
-
+import userRoutes from "./routes/userRoutes.js";
+import productRoutes from "./routes/productRoutes.js";
+import commentRoutes from "./routes/commentRoutes.js";
 
 // Load environment variables from your .env file
 dotenv.config({ quiet: true });
@@ -26,6 +28,10 @@ app.get("/", (req, res) => {
     },
   });
 });
+
+app.use("/api/users", userRoutes);
+app.use("/api/products", productRoutes);
+app.use("/api/comments", commentRoutes);
 
 // Use process.env.PORT with a fallback (e.g., 3000)
 const PORT = process.env.PORT || 3000;
