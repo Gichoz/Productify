@@ -3,6 +3,21 @@
   themes: all;
 }
 
+html, body {
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
+#root {
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
+img, video {
+  max-width: 100%;
+  height: auto;
+}
+
 @keyframes card-float {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-10px); }
@@ -15,4 +30,3 @@
 .card-float-hover:hover {
   transform: translateY(-6px);
 }
-  
