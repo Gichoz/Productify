@@ -1,11 +1,11 @@
 import { Link, useNavigate } from "react-router";
 import { useMyProducts, useDeleteProduct } from "../hooks/useProducts";
 import LoadingSpinner from "../components/LoadingSpinner";
-import { PlusIcon, PackageIcon, EyeIcon, EditIcon, Trash2Icon } from "lucide-react";
+import { PlusIcon, PackageIcon, EyeIcon, EditIcon, Trash2Icon, AlertCircleIcon } from "lucide-react";
 
 const ProfilePage = () => {
   const navigate = useNavigate();
-  const { data: products, isLoading } = useMyProducts();
+  const { data: products, isLoading, isError, refetch } = useMyProducts();
   const deleteProduct = useDeleteProduct();
 
   const handleDelete = (id) => {
@@ -13,6 +13,23 @@ const ProfilePage = () => {
   };
 
   if (isLoading) return <LoadingSpinner />;
+
+  if (isError) {
+    return (
+      <div className="card bg-base-300 max-w-md mx-auto">
+        <div className="card-body items-center text-center py-10">
+          <AlertCircleIcon className="size-12 text-error" />
+          <h3 className="card-title mt-2">Failed to load products</h3>
+          <p className="text-base-content/60 text-sm">
+            Something went wrong while fetching your listings.
+          </p>
+          <button onClick={() => refetch()} className="btn btn-primary btn-sm mt-4">
+            Try Again
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">

@@ -5,13 +5,14 @@ import { useAuth } from "@clerk/clerk-react";
 import { useProduct, useDeleteProduct } from "../hooks/useProducts";
 import { useParams, Link, useNavigate } from "react-router";
 
+const DEFAULT_IMAGE = "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600&auto=format&fit=crop&q=80";
+
 function ProductPage() {
   const { id } = useParams();
   const { userId } = useAuth();
   const navigate = useNavigate();
 
   const { data: product, isLoading, error } = useProduct(id);
-  console.log("Product data:", product);
   const deleteProduct = useDeleteProduct();
 
   const handleDelete = () => {
@@ -36,12 +37,8 @@ function ProductPage() {
   }
 
   const isOwner = userId === product.userId;
-
-  // Handles both camelCase and snake_case API responses + default fallback
-  const displayImage =
-    product.imageUrl ||
-    product.image_url ||
-    "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600&auto=format&fit=crop&q=80";
+  const displayImage = product.imageUrl || product.image_url || DEFAULT_IMAGE;
+  const userAvatar = product.user?.imageUrl || product.user?.image_url;
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
@@ -80,8 +77,8 @@ function ProductPage() {
               alt={product.title || "Product image"}
               className="h-64 w-full object-cover rounded-xl"
               onError={(e) => {
-                e.currentTarget.src =
-                  "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600&auto=format&fit=crop&q=80";
+                e.currentTarget.onerror = null;
+                e.currentTarget.src = DEFAULT_IMAGE;
               }}
             />
           </figure>
@@ -130,11 +127,16 @@ function ProductPage() {
                 <div className="divider my-2"></div>
                 <div className="flex items-center gap-3">
                   <div className="avatar">
-                    <div className="w-12 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
-                      <img
-                        src={product.user.imageUrl || product.user.image_url}
-                        alt={product.user.name || "User"}
-                      />
+                    <div className="w-12 h-12 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2 overflow-hidden flex items-center justify-center bg-base-200">
+                      {userAvatar ? (
+                        <img
+                          src={userAvatar}
+                          alt={product.user.name || "User"}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <UserIcon className="size-6 text-base-content/60" />
+                      )}
                     </div>
                   </div>
                   <div>

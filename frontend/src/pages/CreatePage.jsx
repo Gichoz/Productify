@@ -15,6 +15,10 @@ function CreatePage() {
     });
   };
 
+  const handleImageUrlChange = (e) => {
+    setFormData({ ...formData, imageUrl: e.target.value });
+  };
+
   return (
     <div className="max-w-lg mx-auto">
       <Link to="/" className="btn btn-ghost btn-sm gap-1 mb-4">
@@ -50,7 +54,7 @@ function CreatePage() {
                 placeholder="Image URL"
                 className="grow"
                 value={formData.imageUrl}
-                onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })}
+                onChange={handleImageUrlChange}
                 required
               />
             </label>
@@ -59,10 +63,11 @@ function CreatePage() {
             {formData.imageUrl && (
               <div className="rounded-box overflow-hidden">
                 <img
+                  key={formData.imageUrl}
                   src={formData.imageUrl}
                   alt="Preview"
                   className="w-full h-40 object-cover"
-                  onError={(e) => (e.target.style.display = "none")}
+                  onError={(e) => (e.currentTarget.style.display = "none")}
                 />
               </div>
             )}
@@ -103,4 +108,5 @@ function CreatePage() {
     </div>
   );
 }
+
 export default CreatePage;

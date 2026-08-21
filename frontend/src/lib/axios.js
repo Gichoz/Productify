@@ -1,7 +1,13 @@
 import axios from "axios";
 
+const baseURL = import.meta.env.VITE_API_URL;
+
+if (import.meta.env.PROD && !baseURL) {
+  throw new Error("Missing required environment variable: VITE_API_URL in production.");
+}
+
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || "http://localhost:3000/api",
+  baseURL: baseURL || "http://localhost:3000/api",
   withCredentials: true,
 });
 

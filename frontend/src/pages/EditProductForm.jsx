@@ -15,7 +15,13 @@ function EditProductForm({ product, isPending, isError, onSubmit }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit(formData);
+    // Include formData.price alongside title, description, and imageUrl
+    onSubmit({
+      title: formData.title,
+      description: formData.description,
+      imageUrl: formData.imageUrl,
+      price: formData.price === "" ? null : Number(formData.price),
+    });
   };
 
   return (
@@ -31,10 +37,11 @@ function EditProductForm({ product, isPending, isError, onSubmit }) {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="form-control">
-            <label className="label">
+            <label htmlFor="title" className="label">
               <span className="label-text">Title</span>
             </label>
             <input
+              id="title"
               type="text"
               name="title"
               value={formData.title}
@@ -45,10 +52,11 @@ function EditProductForm({ product, isPending, isError, onSubmit }) {
           </div>
 
           <div className="form-control">
-            <label className="label">
+            <label htmlFor="description" className="label">
               <span className="label-text">Description</span>
             </label>
             <textarea
+              id="description"
               name="description"
               value={formData.description}
               onChange={handleChange}
@@ -57,10 +65,11 @@ function EditProductForm({ product, isPending, isError, onSubmit }) {
           </div>
 
           <div className="form-control">
-            <label className="label">
+            <label htmlFor="imageUrl" className="label">
               <span className="label-text">Image URL</span>
             </label>
             <input
+              id="imageUrl"
               type="url"
               name="imageUrl"
               value={formData.imageUrl}
@@ -69,11 +78,27 @@ function EditProductForm({ product, isPending, isError, onSubmit }) {
             />
           </div>
 
+          {/* IMG PREVIEW */}
+          {formData.imageUrl && (
+            <div className="rounded-box overflow-hidden">
+              <img
+                key={formData.imageUrl}
+                src={formData.imageUrl}
+                alt="Preview"
+                className="w-full h-40 object-cover"
+                onError={(e) => {
+                  e.currentTarget.style.display = "none";
+                }}
+              />
+            </div>
+          )}
+
           <div className="form-control">
-            <label className="label">
+            <label htmlFor="price" className="label">
               <span className="label-text">Price</span>
             </label>
             <input
+              id="price"
               type="number"
               name="price"
               step="0.01"
@@ -100,4 +125,6 @@ function EditProductForm({ product, isPending, isError, onSubmit }) {
   );
 }
 
-export default EditProductForm;
+export default function EditProductFormWrapper(props) {
+  return <EditProductForm key={props.product?.id} {...props} />;
+}

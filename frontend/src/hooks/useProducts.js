@@ -1,4 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useAuth } from "@clerk/clerk-react";
+import { useEffect } from "react";
 import {
   createProduct,
   deleteProduct,
@@ -53,13 +55,24 @@ export const useDeleteProduct = () => {
 };
 
 export const useMyProducts = () => {
+  const { userId, isLoaded } = useAuth();
+  const queryClient = useQueryClient();
+
+  // Clear myProducts queries from cache when user signs out
+  useEffect(() => {
+    if (isLoaded && !userId) {
+      queryClient.removeQueries({ queryKey: ["myProducts"] });
+    }
+  }, [isLoaded, userId, queryClient]);
+
   return useQuery({
-    queryKey: ["myProducts"],
+    queryKey: ["myProducts", userId],
     queryFn: async () => {
       const response = await getMyProducts();
       const data = response?.data ?? response;
       return Array.isArray(data) ? data : [];
     },
+    enabled: isLoaded && Boolean(userId),
   });
 };
 
