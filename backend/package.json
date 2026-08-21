@@ -27,9 +27,7 @@
   "allowScripts": {
     "@clerk/shared@3.47.8": true,
     "@clerk/shared@2.22.1": true,
-    "esbuild@0.28.2": true,
     "es5-ext@0.10.64": true,
-    "esbuild@0.18.20": true,
     "esbuild@0.25.12": true
   },
   "devDependencies": {
