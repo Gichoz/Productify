@@ -10,7 +10,7 @@ function Navbar() {
     <div className="navbar bg-base-300">
       <div className="max-w-5xl mx-auto w-full px-2 sm:px-4 flex justify-between items-center gap-1">
         {/* LOGO - LEFT SIDE */}
-        <div className="flex-shrink-0">
+        <div className="shrink-0">
           <Link to="/" className="btn btn-ghost btn-sm sm:btn-md gap-1 sm:gap-2 px-2">
             <ShoppingBagIcon className="size-5 text-primary" />
             <span className="hidden sm:inline text-lg font-bold font-mono uppercase tracking-wider">
@@ -19,7 +19,7 @@ function Navbar() {
           </Link>
         </div>
 
-        <div className="flex gap-1 sm:gap-2 items-center flex-shrink-0">
+        <div className="flex gap-1 sm:gap-2 items-center shrink-0">
           <ThemeSelector />
           {isSignedIn ? (
             <>
